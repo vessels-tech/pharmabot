@@ -17,7 +17,7 @@ class ThreadPage extends Component {
   render() {
     let blurClass = ''
 
-    if (this.props.location.pathname !== '/thread') {
+    if (this.props.location.pathname !== '/') {
       blurClass = ' blur'
     }
 
@@ -25,7 +25,7 @@ class ThreadPage extends Component {
       <div className={' justify-center pa6' + blurClass}>
         <h2>New Questions</h2>
         <Link
-          to='/thread/create'
+          to='/create'
           className='ma3 new-post br2 flex flex-column items-center justify-center ttu fw6 f20 black-30 no-underline'
           style={{padding: 20}}
         >

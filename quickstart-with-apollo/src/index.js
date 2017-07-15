@@ -12,7 +12,7 @@ import 'tachyons'
 import './index.css'
 
 const networkInterface = createNetworkInterface({
-  uri: GRAPHCOOL_URI
+  uri: process.env.REACT_APP_GRAPHQL_ENDPOINT
 })
 
 const client = new ApolloClient({networkInterface})
@@ -21,11 +21,8 @@ ReactDOM.render(
   <ApolloProvider client={client}>
     <Router>
       <div>
-        <Route exact path='/' component={ListPage} />
-        <Route path='/create' component={CreatePage} />
-        <Route path='/post/:id' component={DetailPage} />
-        <Route exact path='/thread/' component={ThreadPage} />
-        <Route path='/thread/create' component={ThreadCreate} />
+        <Route exact path='/' component={ThreadPage} />
+        <Route path='/create' component={ThreadCreate} />
         <Route path='/thread/:id' component={ThreadDetailPage} />
       </div>
     </Router>

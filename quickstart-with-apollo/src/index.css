@@ -61,6 +61,10 @@ html {
   filter: blur(7px);
 }
 
+.disable {
+  opacity: 0.2;
+}
+
 .close {
   opacity: 0.5;
   margin-top: 60px;

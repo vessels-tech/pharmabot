@@ -6,6 +6,9 @@ import { Loading } from './common'
 
 class ThreadDetailPage extends Component {
 
+  state = {
+    answer: ''
+  }
 
   handleClose = async (answered) => {
     await this.props.updateThread({
@@ -14,16 +17,56 @@ class ThreadDetailPage extends Component {
         answered: answered
       }
     });
-
-    //TODO: update the button? or does this happen automatically?
+    //TODO: optimistically update button
   }
 
-  getPosts() {
+  submitAnswer = async () => {
+    //TODO: clear state
+    const posts = this.props.data.Thread.posts.slice();
+    posts.push(this.state.answer);
+
+    await this.props.submitAnswer({
+      variables: {
+        id: this.props.data.Thread.id,
+        posts:posts
+      }
+    });
+
+    //TODO: might have side affects when we add things to state
+    this.setState({
+      answer:''
+    });
+  }
+
+  getQuestion() {
     const { Thread } = this.props.data;
 
-    return Thread.posts.map(post => <h4 key={post}>{post}</h4>);
+    return (
+      <h4>
+        {Thread.posts[0]}
+      </h4>
+    );
   }
 
+  getImage() {
+    const { Thread } = this.props.data;
+
+    if (!Thread.imageUrl || Thread.imageUrl.indexOf('http') === -1) {
+      return null;
+    }
+
+    return (
+      <div
+        className='image'
+        style={{
+          backgroundImage: `url(${Thread.imageUrl})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          paddingBottom: '50%',
+        }}
+      />
+    );
+  }
   /**
    * If the question is unanswered, make it red, otherwise make it green!
    */
@@ -45,6 +88,59 @@ class ThreadDetailPage extends Component {
     );
   }
 
+  getAnswers() {
+    const { Thread } = this.props.data;
+
+    const answers = Thread.posts.map((post, idx) => {
+      if (idx === 0) {
+        return null;
+      }
+
+      return (
+        <h4 key={encodeURIComponent(post)}>{post}</h4>
+      );
+    });
+
+    return (
+      <div>Other answers:
+        {answers}
+      </div>
+    );
+  }
+
+  getAnswerField() {
+    const { Thread } = this.props.data;
+
+    //Disable the field if the question has been marked as answered
+    if (Thread.answered) {
+      return null;
+    }
+
+    const baseClass = "tc items-center fl w-100 pa2 f6 link ba bw1 ph3 pv2 mb2 dib dark-green";
+    let button = (
+      <div className={baseClass + ' disable'} disabled="true">Submit</div>
+    );
+
+    if (this.state.answer !== '') {
+      button = (
+        <div className={baseClass + ' dim'} onClick={this.submitAnswer}>Submit</div>
+      );
+    }
+
+    return (
+      <div className='bg-white ma3 post flex flex-column no-underline br2' style={{padding: 20}}>
+        <textarea id="comment" name="comment" placeholder="Your Answer"
+          className="db border-box hover-black w-100 ba b--black-20 pa2 br2 mb2"
+          aria-describedby="comment-desc"
+          value={this.state.answer}
+          onChange={e => this.setState({answer: e.target.value})}
+          >
+          </textarea>
+        {button}
+      </div>
+    );
+  }
+
   render() {
     if (this.props.data.loading) {
       return <Loading/>
@@ -53,26 +149,24 @@ class ThreadDetailPage extends Component {
     const { Thread } = this.props.data;
 
     return (
-      <div
-        className='bg-white ma3 post flex flex-column no-underline br2'
-        style={{padding: 20}}
-      >
+      <div>
         <div
-          className='image'
-          style={{
-            backgroundImage: `url(${Thread.imageUrl})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            paddingBottom: '50%',
-          }}
-        />
-        <h2>Asked by: {Thread.askedBy}</h2>
-        <div className='flex items-center black-80 fw3 question'>
-          {this.getPosts()}
+          className='bg-white ma3 post flex flex-column no-underline br2'
+          style={{padding: 20}}
+        >
+          {this.getImage()}
+          <h2>Asked by: {Thread.askedBy}</h2>
+          <div className='flex items-center black-80 fw3 question'>
+            {this.getQuestion()}
+          </div>
+          {/* TODO: show only to the user who made this post */}
+          {this.getAnsweredButton()}
+          <h3>Tags:{Thread.tags}</h3>
         </div>
-        {/* TODO: show only to the user who made this post */}
-        {this.getAnsweredButton()}
-        <h3>Tags:{Thread.tags}</h3>
+        <div className='bg-white ma3 post flex flex-column no-underline br2' style={{padding: 20}}>
+          {this.getAnswers()}
+        </div>
+        {this.getAnswerField()}
       </div>
     );
   }
@@ -110,4 +204,16 @@ const ThreadDetailPageWithData = graphql(ThreadQuery, {
 
 const ThreadDetailPageWithMarkAnswered = graphql(markAnsweredMutation, {name: 'updateThread'})(ThreadDetailPageWithData)
 
-export default withRouter(ThreadDetailPageWithMarkAnswered);
+// This is a little flawed as we cant just save a new post, we have to modify the existing ones.
+// This will result in issues later on
+const submitAnswerMutation = gql`
+  mutation submitAnswer($id: ID!, $posts: [String!]!) {
+    updateThread(id: $id, posts: $posts) {
+      id
+      posts
+    }
+  }
+`
+const ThreadDetailPageWithSubmitAnswerMutation = graphql(submitAnswerMutation, {name: 'submitAnswer'})(ThreadDetailPageWithMarkAnswered)
+
+export default withRouter(ThreadDetailPageWithSubmitAnswerMutation);
