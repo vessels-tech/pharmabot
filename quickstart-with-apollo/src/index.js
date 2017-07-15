@@ -12,8 +12,7 @@ import 'tachyons'
 import './index.css'
 
 const networkInterface = createNetworkInterface({
-// https://api.graph.cool/simple/v1/cj3dy6o9u3dmv0104rf6qynga looks similar to: `https://api.graph.cool/simple/v1/<PROJECT_ID>`
-  uri: 'https://api.graph.cool/simple/v1/cj3dy6o9u3dmv0104rf6qynga'
+  uri: GRAPHCOOL_URI
 })
 
 const client = new ApolloClient({networkInterface})
