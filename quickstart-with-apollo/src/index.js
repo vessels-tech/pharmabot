@@ -11,6 +11,8 @@ import {ApolloProvider, createNetworkInterface, ApolloClient} from 'react-apollo
 import 'tachyons'
 import './index.css'
 
+import { Nav } from './components/common'
+
 const networkInterface = createNetworkInterface({
   uri: process.env.REACT_APP_GRAPHQL_ENDPOINT
 })
@@ -21,6 +23,7 @@ ReactDOM.render(
   <ApolloProvider client={client}>
     <Router>
       <div>
+        <Nav/>
         <Route exact path='/' component={ThreadPage} />
         <Route path='/create' component={ThreadCreate} />
         <Route path='/thread/:id' component={ThreadDetailPage} />

@@ -22,7 +22,7 @@ class ThreadPage extends Component {
     }
 
     return (
-      <div className={' justify-center pa6' + blurClass}>
+      <div className={' justify-center pa5' + blurClass}>
         <h2>New Questions</h2>
         <Link
           to='/create'

@@ -9,7 +9,7 @@ class ThreadList extends Component {
 
   render() {
     if (this.props.data.loading) {
-      return <Loading/>
+      return <Loading type={'card'}/>
     }
 
     return (
