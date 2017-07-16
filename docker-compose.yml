@@ -1,0 +1,14 @@
+version: '3'
+services:
+  pharmabot_ui:
+    container_name: pb_ui
+    build: ./quickstart-with-apollo/
+    image: lewisdaly/pb_ui:latest
+    ports:
+      - "4000:3000"
+    volumes:
+      - ./quickstart-with-apollo:/usr/src/app
+      - ./quickstart-with-apollo/node_modules:/usr/src/app/node_modules
+    environment:
+      - REACT_APP_GRAPHQL_ENDPOINT
+      - REACT_APP_FILE_ENDPOINT
