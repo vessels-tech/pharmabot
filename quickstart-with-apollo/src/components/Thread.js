@@ -37,7 +37,7 @@ class Thread extends Component {
       >
         <h2>Asked by: {this.props.thread.askedBy}</h2>
 
-        <div className='flex items-center black-80 fw3 question'>
+        <div className='flex items-center black-80 fw3 question pa2'>
           {this.props.thread.posts[0]}
         </div>
         {this.getImage()}

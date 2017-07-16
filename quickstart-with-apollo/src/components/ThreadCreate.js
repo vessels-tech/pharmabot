@@ -2,9 +2,11 @@ import React, {Component} from 'react'
 import { Link, withRouter } from 'react-router-dom'
 import { gql, graphql } from 'react-apollo'
 import { Button } from 'react-bootstrap'
+import Dropzone from 'react-dropzone'
 
 import { Loading } from './common'
 import Thread from './Thread'
+import { uploadFiles } from '../utils/FileUploader'
 
 class ThreadCreate extends Component {
 
@@ -12,7 +14,22 @@ class ThreadCreate extends Component {
     askedBy: '',
     imageUrl: '',
     question: '',
-    tagsString: ''
+    tagsString: '',
+    uploadingImage: false
+  }
+
+  onDrop = async(files) => {
+    let newState = this.state;
+    newState.uploadingImage = true;
+    this.setState(newState);
+
+    //TODO: loading indicator stuff
+    const uploadedFile = await uploadFiles(files);
+
+    newState = this.state;
+    newState.imageUrl = uploadedFile.url;
+    newState.uploadingImage = false;
+    this.setState(newState);
   }
 
   submit = async () => {
@@ -39,6 +56,22 @@ class ThreadCreate extends Component {
     return isValid;
   }
 
+  getImage() {
+    if (!this.state.imageUrl) {
+      return null;
+    }
+
+    const imageStyle = `url("${this.state.imageUrl}") center`;
+    console.log("imageStyle", imageStyle);
+    return (
+      <article className="mw5 mw6-ns center pt4">
+        <div className="aspect-ratio aspect-ratio--16x9 mb4">
+          <div className="aspect-ratio--object cover" style={{background: imageStyle}}></div>
+        </div>
+      </article>
+    );
+  }
+
   getSubmitButton() {
     const baseClass = "tc items-center fl w-100 pa2 f6 link ba bw1 ph3 pv2 mb2 dib dark-green";
 
@@ -62,19 +95,14 @@ class ThreadCreate extends Component {
         <h2 className='pa4 flex justify-center'>Ask a new question</h2>
         <div className='pa4 flex justify-center bg-white'>
           <div style={{maxWidth: 400}} className=''>
-            {this.state.imageUrl &&
-              <img
-                src={this.state.imageUrl}
-                role='presentation'
-                className='w-100 mv3'
-              />}
-            <input
-              className='w-100 pa3 mv2'
-              value={this.state.imageUrl}
-              placeholder='Image Url'
-              onChange={e => this.setState({imageUrl: e.target.value})}
-              autoFocus
-            />
+            {!this.state.imageUrl && !this.state.uploadingImage &&
+              <Dropzone className="dropzone w-100" onDrop={e => this.onDrop(e)}>
+                <p className="pa3 ba mv3 f6 f5-ns lh-copy measure mv0">Try dropping some files here, or click to select files to upload.</p>
+              </Dropzone>}
+            {this.state.uploadingImage &&
+              <p className='pa4 flex justify-center'>Loading...</p>
+            }
+            {this.getImage()}
             <input
               className='w-100 pa3 mv2'
               value={this.state.askedBy}
@@ -100,7 +128,6 @@ class ThreadCreate extends Component {
       </div>
     )
   }
-
 }
 
 const addMutation = gql`
