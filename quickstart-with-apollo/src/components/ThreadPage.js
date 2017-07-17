@@ -22,12 +22,11 @@ class ThreadPage extends Component {
     }
 
     return (
-      <div className={' justify-center pa5' + blurClass}>
+      <div className={' justify-center list items-center' + blurClass}>
         <h2>New Questions</h2>
         <Link
           to='/create'
-          className='ma3 new-post br2 flex flex-column items-center justify-center ttu fw6 f20 black-30 no-underline'
-          style={{padding: 20}}
+          className='mv3 new-post br2 flex flex-column items-center justify-center ttu fw6 f20 black-30 no-underline'
         >
           <img
             src={require('../assets/plus.svg')}

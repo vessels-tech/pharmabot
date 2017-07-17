@@ -14,7 +14,7 @@ class ThreadList extends Component {
 
     return (
       <div>
-        <div style={{maxWidth: 1150}}>
+        <div>
           {this.props.data.allThreads.map(thread => (
             <Thread
               key={thread.id}

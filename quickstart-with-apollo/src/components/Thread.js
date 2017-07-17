@@ -31,8 +31,7 @@ class Thread extends Component {
   render() {
     return (
       <Link
-        className='bg-white ma3 post flex flex-column no-underline br2'
-        style={{padding: 20}}
+        className='mv3 bg-white post flex flex-column no-underline br2'
         to={`/thread/${this.props.thread.id}`}
       >
         <h2>Asked by: {this.props.thread.askedBy}</h2>

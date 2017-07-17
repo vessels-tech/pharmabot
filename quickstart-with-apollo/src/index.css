@@ -1,9 +1,27 @@
+/* BREAKPOINTS
+ * min - XS 0px
+ * max - XS 575px
+ 
+ * min - SM 576px
+ * max - SM 767px
+ 
+ * min - MD 768px
+ * max - MD 991px
+ 
+ * min - LG 992px
+ * max - LG 1199px
+ 
+ * min - XL 1200px
+ * max - XL -
+*/
+
+/* TODO: move to index.html to prevent render blocking */
 @import 'https://fonts.googleapis.com/css?family=Open+Sans:300,400';
 
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Open Sans', Helvetica, 'Heveltica Neue', arial, sans-serif;
   background: rgba(0,0,0,.05);
 }
 
@@ -22,6 +40,7 @@ html {
 
 .post {
   box-shadow: 0 1px 6px rgba(0,0,0,.15);
+  padding: 1em;
 }
 
 .post .image {
@@ -100,4 +119,21 @@ html {
   letter-spacing: 0.46px;
   margin-top: 18px;
   margin-left: 18px;
+}
+
+.image {
+  max-width: 100%;
+  border-radius: 5px;
+}
+
+.list {
+  max-width: 1150px;
+  padding: 0 5em;
+  margin: auto;
+}
+
+@media (max-width: 767px) {
+  .list {
+    padding: 0 1em;
+  }
 }
