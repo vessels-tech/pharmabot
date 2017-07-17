@@ -1,32 +1,8 @@
 import React, {Component} from 'react'
 import { Link } from 'react-router-dom'
-
+import { ThreadImage } from './common'
 
 class Thread extends Component {
-
-  getImage() {
-    const { thread } = this.props;
-
-    if (!thread.imageUrl || thread.imageUrl === "") {
-      return null;
-    }
-
-    if (thread.imageUrl.indexOf('http') === -1) {
-      return null;
-    }
-
-    return (
-      <div
-        className='image'
-        style={{
-          backgroundImage: `url(${thread.imageUrl})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          paddingBottom: '50%',
-        }}
-      />
-    );
-  }
 
   render() {
     return (
@@ -40,7 +16,7 @@ class Thread extends Component {
         <div className='flex items-center black-80 fw3 question pa2'>
           {this.props.thread.posts[0]}
         </div>
-        {this.getImage()}
+        <ThreadImage imageUrl={this.props.thread.imageUrl}/>
         <h3>Tags:{this.props.thread.tags}</h3>
       </Link>
     );
