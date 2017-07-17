@@ -4,7 +4,7 @@ import { gql, graphql } from 'react-apollo'
 import { Button } from 'react-bootstrap'
 import Dropzone from 'react-dropzone'
 
-import { Loading } from './common'
+import { Loading, ThreadImage } from './common'
 import Thread from './Thread'
 import { uploadFiles } from '../utils/FileUploader'
 
@@ -61,15 +61,7 @@ class ThreadCreate extends Component {
       return null;
     }
 
-    const imageStyle = `url("${this.state.imageUrl}") center`;
-    console.log("imageStyle", imageStyle);
-    return (
-      <article className="mw5 mw6-ns center pt4">
-        <div className="aspect-ratio aspect-ratio--16x9 mb4">
-          <div className="aspect-ratio--object cover" style={{background: imageStyle}}></div>
-        </div>
-      </article>
-    );
+    return <ThreadImage imageUrl={this.state.imageUrl}/>;
   }
 
   getSubmitButton() {
